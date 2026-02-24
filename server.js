@@ -1,49 +1,55 @@
 const express = require("express");
+const cors = require("cors");
 const fetch = require("node-fetch");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
-app.post("/ai", async (req,res)=>{
+app.post("/", async (req, res) => {
 
-const message=req.body.message;
+    const message = req.body.message;
 
-const response=await fetch(
-"https://api.openai.com/v1/chat/completions",
-{
-method:"POST",
+    try {
 
-headers:{
-"Content-Type":"application/json",
-"Authorization":"Bearer YOUR_API_KEY"
-},
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer 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"
+            },
+            body: JSON.stringify({
+                model: "gpt-4o-mini",
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are Eclipse7 AI, a smart study assistant."
+                    },
+                    {
+                        role: "user",
+                        content: message
+                    }
+                ]
+            })
+        });
 
-body:JSON.stringify({
+        const data = await response.json();
 
-model:"gpt-4o-mini",
+        res.json({
+            reply: data.choices[0].message.content
+        });
 
-messages:[
-{
-role:"system",
-content:"You are Eclipse7 AI study assistant."
-},
-{
-role:"user",
-content:message
-}
-]
+    } catch (error) {
 
-})
+        res.json({
+            reply: "Server Error"
+        });
+
+    }
 
 });
 
-const data=await response.json();
-
-res.json(data);
-
-});
-
-app.listen(10000,()=>{
-console.log("AI Running");
+app.listen(3000, () => {
+    console.log("Server running");
 });
