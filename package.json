@@ -1,0 +1,8 @@
+{
+"name":"eclipse7-ai",
+"version":"1.0.0",
+"dependencies":{
+"express":"^4.18.2",
+"node-fetch":"^2.6.7"
+}
+}
